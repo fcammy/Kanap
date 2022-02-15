@@ -134,6 +134,20 @@ h2 {
 	box-shadow: rgb(42 18 206 / 90%) 0 0 22px 6px;
 }
 
+/********/ 
+/*Badge*/
+/******/
+#badge {
+
+	font-size: 17px;
+    color: #eb0b0b;
+    padding: 0 5px;
+    vertical-align: top;
+    position: relative;
+    top: -8px;
+    left: -5px;
+
+}
 
 
 /***************/

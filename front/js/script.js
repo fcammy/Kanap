@@ -3,7 +3,7 @@
 const items = document.querySelector('.items');
 
 
-// get data from API
+// get products data from API
 
 const getAllProducts =  async () => {
 
