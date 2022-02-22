@@ -6,10 +6,11 @@ const city = document.querySelector("#city");
 const email = document.getElementById("email");
 const btnOrder = document.querySelector("#order");
 const products = document.querySelector(".cart__item");
+const form = document.querySelector("cart__order__form");
 let deleteBtns,
   qtyInputs = [];
 
-// function to calculate the total price of the products in the cart and update products number in cart
+// FUNCTION TO CALCULATE THE TOTAL PRICE OF THE PRODUCTS IN THE CART AND UPDATE PRODUCTS NUMBER IN CART
 
 const updateTotal = () => {
   let cartProducts = JSON.parse(localStorage.getItem("cart"));
@@ -32,7 +33,7 @@ const updateTotal = () => {
   }
 };
 
-// function to display front end data to page and update page when product added or removed
+// FUNCTION TO DISPLAY FRONT END DATA TO PAGE AND UPDATE PAGE WHEN PRODUCT ADDED OR REMOVED
 
 const displayCart = () => {
   const cartItems = localStorage.getItem("cart");
@@ -45,7 +46,7 @@ const displayCart = () => {
   cart.forEach((item) => {
     //console.log(item);
 
-    // displaying products on the DOM
+    // DISPLAYING PRODUCTS ON THE DOM
 
     products.innerHTML += `
 
@@ -92,16 +93,14 @@ const displayCart = () => {
 };
 displayCart();
 
-// function to remove products from cart and update the localstorage
+// FUNCTION TO REMOVE PRODUCTS FROM CART AND UPDATE LOCALSTORAGE
 
 function removeProduct({ target }) {
   const cartId = Number(target.parentNode.parentNode.dataset.cartid);
 
   let cartItems = JSON.parse(localStorage.getItem("cart"));
 
-  console.log({ before: cartItems });
   cartItems = cartItems.filter((item) => item.cartId !== cartId);
-  console.log({ after: cartItems });
 
   localStorage.setItem("cart", JSON.stringify(cartItems));
 
@@ -110,14 +109,13 @@ function removeProduct({ target }) {
   displayCart();
 }
 
-// change product quantity then update the price
+// CHANGE PRODUCT QUANTITY THEN UPDATE PRICE
 
 function updateQuantity({ target }) {
   const cartId = Number(target.parentNode.parentNode.dataset.cartid);
 
   let cartItems = JSON.parse(localStorage.getItem("cart"));
 
-  console.log({ before: cartItems });
   cartItems = cartItems.map((item) => {
     if (item.cartId === cartId) {
       item.qty = Number(target.value);
@@ -126,8 +124,84 @@ function updateQuantity({ target }) {
 
     return item;
   });
-  console.log({ after: cartItems });
+  
 
   localStorage.setItem("cart", JSON.stringify(cartItems));
   displayCart();
 }
+
+
+// VALIDATE FIRST NAME
+
+firstName.addEventListener('blur', () => {
+
+ const firstNamePattern = /^[a-zA-Z]+$/;
+ const firstNameError = document.getElementById('firstNameErrorMsg');
+
+ if(firstNamePattern.test(firstName.value)) {
+   firstNameError.textContent = 'Name entered is valid';
+
+ } else {
+   firstNameError.textContent = 'Name must not contain a number';
+ }
+
+});
+
+// VALIDATE LAST NAME
+
+lastName.addEventListener('blur', () => {
+
+  const lastNamePattern = /^[a-zA-Z]+$/;
+  const lastNameError = document.getElementById('lastNameErrorMsg');
+ 
+  if(lastNamePattern.test(lastName.value)) {
+    lastNameError.textContent = 'Last Name entered is valid';
+ 
+  } else {
+    lastNameError.textContent = 'Last Name must not contain a number';
+  }
+ 
+ });
+ 
+
+ // VALIDATE ADDRESS 
+
+ address.addEventListener('blur', () => {
+
+   const addressPattern = /^\s*\S+(?:\s+\S+){2}/;
+   const addressError = document.getElementById('addressErrorMsg');
+
+   if(addressPattern.test(address.value)) {
+     addressError.textContent = 'Address entered is valid';
+   } else {
+     addressError.textContent = 'You must enter a valid address';
+   }
+ });
+
+ // VALIDATE CITY
+
+ city.addEventListener('blur', () => {
+
+  const cityPattern =  /^[a-zA-Z]+$/;
+  const cityError = document.getElementById('cityErrorMsg');
+
+  if(cityPattern.test(city.value)) {
+    cityError.textContent = 'City entered is valid';
+  } else {
+    cityError.textContent = 'You must enter a valid city';
+  }
+});
+
+// VALIDATE EMAIL ADDRESS
+
+email.addEventListener('blur', () => {
+  const emailPattern = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+  const emailError = document.getElementById('emailErrorMsg');
+
+  if(emailPattern.test(email.value)) {
+    emailError.textContent = ' Email is valid';
+
+  } else {
+    emailError.textContent = ' Email is invalid';
+  }
+});

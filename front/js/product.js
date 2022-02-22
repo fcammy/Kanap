@@ -8,7 +8,7 @@ const sofaColors = document.getElementById("colors");
 const quantity = document.querySelector("#quantity");
 const addToCartBtn = document.querySelector("#addToCart");
 
-// Getting a single product
+// GTTING A SINGLE PRODUCT FROM API
 
 const getProduct = async () => {
   const productId = document.location.search.split("=")[1];
@@ -18,7 +18,7 @@ const getProduct = async () => {
   );
   const data = await response.json();
 
-  // // Display sofa details on the DOM
+  // // DISPLAY SOFA DETAILS ON THE PAGE
 
   document.title = `${data.name}`;
   title.innerHTML = `${data.name}`;
@@ -52,12 +52,12 @@ const addToCart = ({ name, price, imageUrl, _id }) => {
     price,
     imageUrl,
     _id,
-    cartId: new Date().getTime(), // get random sofa id for further processing
+    cartId: new Date().getTime(), // GET RANDOM ID FOR PROCESSING
     color: selectedColor,
     qty: selectedQty,
   };
 
-  // update the quantity when products of same colour and id added to the cart
+  // UPDATE THE QUANTITY WHEN PRODUCTS OF SAME COLOUR AND ID ADDED TO THE CART
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -83,7 +83,7 @@ const addToCart = ({ name, price, imageUrl, _id }) => {
   // console.log(product)
   // console.log(cart)
 
-  // add toast notification
+  // ADD TOAST NOTIFCATION
 
   let notification = document.getElementById("confirmation");
   notification.innerHTML = "Added to cart";
