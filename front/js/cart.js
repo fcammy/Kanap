@@ -5,21 +5,24 @@ const address = document.querySelector("#address");
 const city = document.querySelector("#city");
 const email = document.getElementById("email");
 const btnOrder = document.getElementById("order");
-const products = document.querySelector(".cart__item");
+const product = document.querySelector(".cart__item");
 const form = document.querySelector(".cart__order__form");
-const orderId = document.getElementById("orderId");
+const cartQuantity = document.querySelector("#totalQuantity");
+const total = document.querySelector("#totalPrice");
+
+
+
+
 let deleteBtns,
   qtyInputs = [];
 
 // FUNCTION TO CALCULATE THE TOTAL PRICE OF THE PRODUCTS IN THE CART AND UPDATE PRODUCTS NUMBER IN CART
 
-const updateTotal = () => {
+const updateTotal = () => { 
   let cartProducts = JSON.parse(localStorage.getItem("cart"));
-  let cartQuantity = document.querySelector("#totalQuantity");
   cartQuantity.innerHTML = cartProducts.length;
 
   let cartItems = JSON.parse(localStorage.getItem("cart"));
-  let total = document.querySelector("#totalPrice");
   let totalPrice = 0;
   if (cartItems) {
     for (let i = 0; i < cartItems.length; i++) {
@@ -36,20 +39,22 @@ const updateTotal = () => {
 
 // FUNCTION TO DISPLAY FRONT END DATA TO PAGE AND UPDATE PAGE WHEN PRODUCT ADDED OR REMOVED
 
-const displayCart = () => {
-  const cartItems = localStorage.getItem("cart");
+
+
+const displayCart = (cartItems) => {
+  
 
   let cart = cartItems ? JSON.parse(cartItems) : [];
   cart = [...cart];
 
-  products.innerHTML = "";
+  product.innerHTML = "";
 
   cart.forEach((item) => {
     //console.log(item);
 
     // DISPLAYING PRODUCTS ON THE DOM
 
-    products.innerHTML += `
+    product.innerHTML += `
 
         <section class="cart">
             <section id="cart__items>
@@ -92,7 +97,16 @@ const displayCart = () => {
 
   // console.log(qtyInputs)
 };
-displayCart();
+
+let cartItems = localStorage.getItem("cart");
+
+if(cartItems) {
+  displayCart(cartItems) 
+} else {
+  product.innerHTML = `<p>Cart is empty</p>`;
+  cartQuantity.innerHTML = 0;
+  total.innerHTML = '0.00'
+}
 
 // FUNCTION TO REMOVE PRODUCTS FROM CART AND UPDATE LOCALSTORAGE
 
@@ -106,8 +120,7 @@ function removeProduct({ target }) {
   localStorage.setItem("cart", JSON.stringify(cartItems));
 
   // update cart
-
-  displayCart();
+  displayCart(JSON.stringify(cartItems));
 }
 
 // CHANGE PRODUCT QUANTITY THEN UPDATE PRICE
@@ -127,7 +140,8 @@ function updateQuantity({ target }) {
   });
 
   localStorage.setItem("cart", JSON.stringify(cartItems));
-  displayCart();
+
+  displayCart(JSON.stringify(cartItems));
 }
 
 // VALIDATION INITIALASATION
@@ -217,7 +231,6 @@ email.addEventListener("blur", () => {
 // POST DATA ENTERED BY THE USER
 
 form.addEventListener("submit", (e) => {
-
   e.preventDefault();
 
   let products = [];
@@ -270,28 +283,30 @@ const sendInfo = (data) => {
       return response.json();
     })
     .then((data) => {
+
       console.log(data);
 
-     let  orderId = data.orderId;
-      sessionStorage.setItem("orderId", orderId);
+      sessionStorage.setItem("orderId", data.orderId);
+      localStorage.removeItem("cart");
 
       location.replace("/front/html/confirmation.html");
+
+
+
+
       
     })
     .catch((err) => {
       console.log(err);
     });
+
     
 };
 
 
-// SHOWING ORDER ID ON CONFIRMATION PAGE
 
-orderId.innerHTML = `
-    <div class="confirmation">
-    <p>Order confirmed! <br>Your order number is: <span id="orderId">${data.orderId}</span></p>
-    </div>
-    
-`
-localStorage.removeItem('cart');
-sessionStorage.removeItem('orderId');
+
+
+
+
+//sessionStorage.removeItem("orderId");
