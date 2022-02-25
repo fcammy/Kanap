@@ -8,9 +8,12 @@ const sofaColors = document.getElementById("colors");
 const quantity = document.querySelector("#quantity");
 const addToCartBtn = document.querySelector("#addToCart");
 
-// GTTING A SINGLE PRODUCT FROM API
+// GETTING A SINGLE PRODUCT FROM API
 
 const getProduct = async () => {
+
+  // Gettinf product ID to be able to display on a single page
+
   const productId = document.location.search.split("=")[1];
 
   const response = await fetch(
@@ -34,19 +37,23 @@ const getProduct = async () => {
   return data;
 };
 
+// Declaring color and quantity variables
+
 let selectedColor;
 let selectedQty = 0;
 
-sofaColors.addEventListener(
-  "change",
-  ({ target }) => (selectedColor = target.value)
-);
-quantity.addEventListener(
-  "change",
-  ({ target }) => (selectedQty = +target.value)
-);
+// Adding event listener to color and quantity dropbox
+
+sofaColors.addEventListener("change",({ target }) => (selectedColor = target.value));
+
+quantity.addEventListener("change",({ target }) => (selectedQty = +target.value));
+
+// Function to add product to cart
 
 const addToCart = ({ name, price, imageUrl, _id }) => {
+
+  // Declaring product object to hold the parameters
+
   const product = {
     name,
     price,
@@ -62,6 +69,9 @@ const addToCart = ({ name, price, imageUrl, _id }) => {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   const cartItem = cart.find((item) => {
+
+    // checking for product ID and color then update the quantity
+
     if (item._id === product._id && item.color === product.color) {
       item.qty += Number(product.qty);
 
@@ -69,25 +79,24 @@ const addToCart = ({ name, price, imageUrl, _id }) => {
     }
   });
 
-  //console.log({cartItem})
-
   if (cartItem) {
     cart = cart.filter((item) => item.cartId !== cartItem.cartId);
     cart = [...cart, cartItem];
   } else {
     cart = [...cart, product];
   }
+  // Storing product in local storage
 
   localStorage.setItem("cart", JSON.stringify(cart));
 
-  // console.log(product)
-  // console.log(cart)
 
   // ADD TOAST NOTIFCATION
 
-  let notification = document.getElementById("confirmation");
+  const notification = document.getElementById("confirmation");
+
   notification.innerHTML = "Added to cart";
   notification.className = "toast";
+
   setTimeout(function () {
     notification.className = notification.className.replace("toast", " ");
   }, 2000);

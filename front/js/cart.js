@@ -19,10 +19,10 @@ let deleteBtns,
 // FUNCTION TO CALCULATE THE TOTAL PRICE OF THE PRODUCTS IN THE CART AND UPDATE PRODUCTS NUMBER IN CART
 
 const updateTotal = () => { 
-  let cartProducts = JSON.parse(localStorage.getItem("cart"));
-  cartQuantity.innerHTML = cartProducts.length;
-
+  
   let cartItems = JSON.parse(localStorage.getItem("cart"));
+  cartQuantity.innerHTML = cartItems.length;
+
   let totalPrice = 0;
   if (cartItems) {
     for (let i = 0; i < cartItems.length; i++) {

@@ -1,24 +1,21 @@
-
 // DOM access
-const items = document.querySelector('.items');
+const items = document.querySelector(".items");
 
+// Get products from API then display on the frond end using the fecth method.
 
-// get products data from API
+const getAllProducts = async () => {
+  const response = await fetch("http://localhost:3000/api/products");
 
-const getAllProducts =  async () => {
+  if (response.status !== 200) {
+    throw new Error("cannot fetch the data"); // Initialising error message to display.
+  }
 
-    
-   const response = await fetch('http://localhost:3000/api/products');
+  const data = await response.json();
 
-   const data = await response.json()
-  
-    data.forEach (product => {
+  data.forEach((product) => {
+    //Go through list of products on the backend and displaying products on the DOM.
 
-     //console.log(items);
-     
-      // Displaying products on the DOM.
-      
-      items.innerHTML += `
+    items.innerHTML += `
      
       <a href="./product.html?id=${product._id}">
         <article>
@@ -27,15 +24,10 @@ const getAllProducts =  async () => {
           <p class="productDescription">${product.description}</p>
         </article>
       </a>
-     ` 
-    });
+     `;
+  });
+};
 
-     
-    };
-   
+// Trying to catch an error if there are any will display the error to the console.
 
-
-getAllProducts();
-
-    
-
+getAllProducts().catch((err) => console.log("rejected:", err.message));
