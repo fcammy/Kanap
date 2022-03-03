@@ -10,15 +10,12 @@ const form = document.querySelector(".cart__order__form");
 const cartQuantity = document.querySelector("#totalQuantity");
 const total = document.querySelector("#totalPrice");
 
-
-
-
 let deleteBtns,
   qtyInputs = [];
 
 // FUNCTION TO CALCULATE THE TOTAL PRICE OF THE PRODUCTS IN THE CART AND UPDATE PRODUCTS NUMBER IN CART
 
-const updateTotal = () => { 
+const updateTotal = () => {
   
   let cartItems = JSON.parse(localStorage.getItem("cart"));
   cartQuantity.innerHTML = cartItems.length;
@@ -39,11 +36,7 @@ const updateTotal = () => {
 
 // FUNCTION TO DISPLAY FRONT END DATA TO PAGE AND UPDATE PAGE WHEN PRODUCT ADDED OR REMOVED
 
-
-
 const displayCart = (cartItems) => {
-  
-
   let cart = cartItems ? JSON.parse(cartItems) : [];
   cart = [...cart];
 
@@ -86,6 +79,46 @@ const displayCart = (cartItems) => {
 
   updateTotal();
 
+  // FUNCTION TO REMOVE PRODUCTS FROM CART AND UPDATE LOCALSTORAGE
+
+  const removeProduct = ({ target }) => {
+
+    const cartId = Number(target.parentNode.parentNode.dataset.cartid);
+  
+    let cartItems = JSON.parse(localStorage.getItem("cart"));
+  
+    cartItems = cartItems.filter((item) => item.cartId !== cartId);
+  
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+  
+    // update cart
+    displayCart(JSON.stringify(cartItems));
+  };
+
+  // CHANGE PRODUCT QUANTITY THEN UPDATE PRICE
+
+  const updateQuantity = ({ target }) => {
+    
+    const cartId = Number(target.parentNode.parentNode.dataset.cartid);
+
+    let cartItems = JSON.parse(localStorage.getItem("cart"));
+
+    cartItems = cartItems.map((item) => {
+      if (item.cartId === cartId) {
+        item.qty = Number(target.value);
+        return item;
+      }
+
+      return item;
+    });
+
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+
+    displayCart(JSON.stringify(cartItems));
+  }
+
+// assigning event listeners to the delete button and quantity input
+
   deleteBtns = document.querySelectorAll(".deleteItem");
   qtyInputs = document.querySelectorAll(".itemQuantity");
 
@@ -98,51 +131,20 @@ const displayCart = (cartItems) => {
   // console.log(qtyInputs)
 };
 
+// Displays products in the cart if any else display cart empty message 
+
 let cartItems = localStorage.getItem("cart");
 
-if(cartItems) {
-  displayCart(cartItems) 
+if (cartItems) {
+  displayCart(cartItems);
 } else {
   product.innerHTML = `<p>Cart is empty</p>`;
   cartQuantity.innerHTML = 0;
-  total.innerHTML = '0.00'
+  total.innerHTML = "0.00";
 }
 
-// FUNCTION TO REMOVE PRODUCTS FROM CART AND UPDATE LOCALSTORAGE
 
-function removeProduct({ target }) {
-  const cartId = Number(target.parentNode.parentNode.dataset.cartid);
 
-  let cartItems = JSON.parse(localStorage.getItem("cart"));
-
-  cartItems = cartItems.filter((item) => item.cartId !== cartId);
-
-  localStorage.setItem("cart", JSON.stringify(cartItems));
-
-  // update cart
-  displayCart(JSON.stringify(cartItems));
-}
-
-// CHANGE PRODUCT QUANTITY THEN UPDATE PRICE
-
-function updateQuantity({ target }) {
-  const cartId = Number(target.parentNode.parentNode.dataset.cartid);
-
-  let cartItems = JSON.parse(localStorage.getItem("cart"));
-
-  cartItems = cartItems.map((item) => {
-    if (item.cartId === cartId) {
-      item.qty = Number(target.value);
-      return item;
-    }
-
-    return item;
-  });
-
-  localStorage.setItem("cart", JSON.stringify(cartItems));
-
-  displayCart(JSON.stringify(cartItems));
-}
 
 // VALIDATION INITIALASATION
 
@@ -283,30 +285,14 @@ const sendInfo = (data) => {
       return response.json();
     })
     .then((data) => {
-
       console.log(data);
 
       sessionStorage.setItem("orderId", data.orderId);
       localStorage.removeItem("cart");
 
       location.replace("/front/html/confirmation.html");
-
-
-
-
-      
     })
     .catch((err) => {
       console.log(err);
     });
-
-    
 };
-
-
-
-
-
-
-
-//sessionStorage.removeItem("orderId");

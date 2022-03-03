@@ -11,8 +11,7 @@ const addToCartBtn = document.querySelector("#addToCart");
 // GETTING A SINGLE PRODUCT FROM API
 
 const getProduct = async () => {
-
-  // Gettinf product ID to be able to display on a single page
+  // Getting a single product ID to be able to display on a single page
 
   const productId = document.location.search.split("=")[1];
 
@@ -44,14 +43,19 @@ let selectedQty = 0;
 
 // Adding event listener to color and quantity dropbox
 
-sofaColors.addEventListener("change",({ target }) => (selectedColor = target.value));
+sofaColors.addEventListener(
+  "change",
+  ({ target }) => (selectedColor = target.value)
+);
 
-quantity.addEventListener("change",({ target }) => (selectedQty = +target.value));
+quantity.addEventListener(
+  "change",
+  ({ target }) => (selectedQty = +target.value)
+);
 
 // Function to add product to cart
 
 const addToCart = ({ name, price, imageUrl, _id }) => {
-
   // Declaring product object to hold the parameters
 
   const product = {
@@ -69,8 +73,7 @@ const addToCart = ({ name, price, imageUrl, _id }) => {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   const cartItem = cart.find((item) => {
-
-    // checking for product ID and color then update the quantity
+    // checking for product ID and color are the same then update the quantity
 
     if (item._id === product._id && item.color === product.color) {
       item.qty += Number(product.qty);
@@ -78,6 +81,8 @@ const addToCart = ({ name, price, imageUrl, _id }) => {
       return item;
     }
   });
+
+  // checking if cartID are not similar then add the products to cart
 
   if (cartItem) {
     cart = cart.filter((item) => item.cartId !== cartItem.cartId);
@@ -89,7 +94,6 @@ const addToCart = ({ name, price, imageUrl, _id }) => {
 
   localStorage.setItem("cart", JSON.stringify(cart));
 
-
   // ADD TOAST NOTIFCATION
 
   const notification = document.getElementById("confirmation");
@@ -97,11 +101,14 @@ const addToCart = ({ name, price, imageUrl, _id }) => {
   notification.innerHTML = "Added to cart";
   notification.className = "toast";
 
+  // function to display the toast for 2 seconds then disappear
+
   setTimeout(function () {
     notification.className = notification.className.replace("toast", " ");
   }, 2000);
 };
 
+// Adding to cart functionality to the cart button using the eventlistener method.
 (async () => {
   const product = await getProduct();
 
