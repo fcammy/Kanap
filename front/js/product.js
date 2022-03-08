@@ -20,6 +20,8 @@ const getProduct = async () => {
   );
   const data = await response.json();
 
+  // console.log(data);
+
   // // DISPLAY SOFA DETAILS ON THE PAGE
 
   document.title = `${data.name}`;
@@ -53,9 +55,19 @@ quantity.addEventListener(
   ({ target }) => (selectedQty = +target.value)
 );
 
+
+
 // Function to add product to cart
 
 const addToCart = ({ name, price, imageUrl, _id }) => {
+
+console.log({selectedQty, selectedColor});
+// 
+// Checking if color and quantity have been selected
+if( typeof selectedColor === 'undefined' || Number(selectedQty) < 1 ) return document.getElementById('error').innerHTML = ' You must select a color and quantity';
+
+
+
   // Declaring product object to hold the parameters
 
   const product = {
@@ -68,45 +80,66 @@ const addToCart = ({ name, price, imageUrl, _id }) => {
     qty: selectedQty,
   };
 
-  // UPDATE THE QUANTITY WHEN PRODUCTS OF SAME COLOUR AND ID ADDED TO THE CART
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  console.log({cart});
 
-  const cartItem = cart.find((item) => {
-    // checking for product ID and color are the same then update the quantity
+  // UPDATE THE QUANTITY WHEN PRODUCTS OF SAME COLOUR AND ID ADDED TO THE CART
+  
 
-    if (item._id === product._id && item.color === product.color) {
-      item.qty += Number(product.qty);
+  let cartItem = {};
+  if(cart.length > 0) {
+     cartItem = cart.find((item) => {
+      // checking for product ID and color are the same then update the quantity
+    
+      if (item._id === product._id && item.color === product.color) {
+        item.qty += Number(product.qty);
+  
+        return item;
+      }
+    });
+  
+  }
 
-      return item;
-    }
-  });
+  console.log({cartItem});
+
+  
 
   // checking if cartID are not similar then add the products to cart
 
-  if (cartItem) {
-    cart = cart.filter((item) => item.cartId !== cartItem.cartId);
+  if (Object.keys(cartItem).length > 0 || (Object.keys(cartItem) === null)) {
+    cart = cart.filter((item) => {
+      console.log({item});
+      // console.log({cartItem});
+      return item.cartId !== cartItem.cartId
+    });
     cart = [...cart, cartItem];
   } else {
     cart = [...cart, product];
   }
+
+  
+
   // Storing product in local storage
-
   localStorage.setItem("cart", JSON.stringify(cart));
-
-  // ADD TOAST NOTIFCATION
 
   const notification = document.getElementById("confirmation");
 
   notification.innerHTML = "Added to cart";
   notification.className = "toast";
 
-  // function to display the toast for 2 seconds then disappear
 
-  setTimeout(function () {
-    notification.className = notification.className.replace("toast", " ");
-  }, 2000);
+  setTimeout( () => notification.className = notification.className.replace("toast", " "), 2000);
+
 };
+
+ // ADD TOAST NOTIFCATION
+
+ 
+ 
+ // function to display the toast for 2 seconds then disappear
+ 
+
 
 // Adding to cart functionality to the cart button using the eventlistener method.
 (async () => {
@@ -114,3 +147,5 @@ const addToCart = ({ name, price, imageUrl, _id }) => {
 
   addToCartBtn.addEventListener("click", () => addToCart(product));
 })();
+
+

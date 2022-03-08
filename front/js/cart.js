@@ -43,7 +43,7 @@ const displayCart = (cartItems) => {
   product.innerHTML = "";
 
   cart.forEach((item) => {
-    //console.log(item);
+    console.log(item);
 
     // DISPLAYING PRODUCTS ON THE DOM
 
@@ -53,7 +53,7 @@ const displayCart = (cartItems) => {
             <section id="cart__items>
                 <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
                 <div class="cart__item__img">
-                    <img src="${item.imageUrl}" alt="Photo of a sofa">
+                    <img src="${item.imageUrl}" alt="Photo of a sofa"> 
                 </div>
                 <div class="cart__item__content">
                 <div class="cart__item__content__description">
@@ -142,8 +142,6 @@ if (cartItems) {
   cartQuantity.innerHTML = 0;
   total.innerHTML = "0.00";
 }
-
-
 
 
 // VALIDATION INITIALASATION
@@ -287,7 +285,6 @@ const sendInfo = (data) => {
     .then((data) => {
       console.log(data);
 
-      sessionStorage.setItem("orderId", data.orderId);
       localStorage.removeItem("cart");
 
       location.replace("/front/html/confirmation.html");
