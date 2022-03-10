@@ -16,7 +16,6 @@ let deleteBtns,
 // FUNCTION TO CALCULATE THE TOTAL PRICE OF THE PRODUCTS IN THE CART AND UPDATE PRODUCTS NUMBER IN CART
 
 const updateTotal = () => {
-  
   let cartItems = JSON.parse(localStorage.getItem("cart"));
   cartQuantity.innerHTML = cartItems.length;
 
@@ -82,15 +81,14 @@ const displayCart = (cartItems) => {
   // FUNCTION TO REMOVE PRODUCTS FROM CART AND UPDATE LOCALSTORAGE
 
   const removeProduct = ({ target }) => {
-
     const cartId = Number(target.parentNode.parentNode.dataset.cartid);
-  
+
     let cartItems = JSON.parse(localStorage.getItem("cart"));
-  
+
     cartItems = cartItems.filter((item) => item.cartId !== cartId);
-  
+
     localStorage.setItem("cart", JSON.stringify(cartItems));
-  
+
     // update cart
     displayCart(JSON.stringify(cartItems));
   };
@@ -98,7 +96,6 @@ const displayCart = (cartItems) => {
   // CHANGE PRODUCT QUANTITY THEN UPDATE PRICE
 
   const updateQuantity = ({ target }) => {
-    
     const cartId = Number(target.parentNode.parentNode.dataset.cartid);
 
     let cartItems = JSON.parse(localStorage.getItem("cart"));
@@ -115,9 +112,9 @@ const displayCart = (cartItems) => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
 
     displayCart(JSON.stringify(cartItems));
-  }
+  };
 
-// assigning event listeners to the delete button and quantity input
+  // assigning event listeners to the delete button and quantity input
 
   deleteBtns = document.querySelectorAll(".deleteItem");
   qtyInputs = document.querySelectorAll(".itemQuantity");
@@ -131,7 +128,7 @@ const displayCart = (cartItems) => {
   // console.log(qtyInputs)
 };
 
-// Displays products in the cart if any else display cart empty message 
+// Displays products in the cart if any else display cart empty message
 
 let cartItems = localStorage.getItem("cart");
 
@@ -142,7 +139,6 @@ if (cartItems) {
   cartQuantity.innerHTML = 0;
   total.innerHTML = "0.00";
 }
-
 
 // VALIDATION INITIALASATION
 
@@ -284,10 +280,14 @@ const sendInfo = (data) => {
     })
     .then((data) => {
       console.log(data);
+      //const orderId = data.orderId;
+      //console.log(orderId);
 
       localStorage.removeItem("cart");
 
-      location.replace("/front/html/confirmation.html");
+      location.replace(
+        "/front/html/confirmation.html" + "?" + "id" + "= " + data.orderId
+      );
     })
     .catch((err) => {
       console.log(err);

@@ -289,6 +289,15 @@ footer .footerSecondary {
 	animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
 
+#error {
+	text-align: center;
+	color: crimson;
+	padding: 20px;
+	font-weight: bold;
+
+}
+
+
 @keyframes fadein {
 	from {bottom: 0; opacity: 0;}
 	to {bottom: 30; opacity: 1;}

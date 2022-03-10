@@ -40,7 +40,7 @@ const getProduct = async () => {
 
 // Declaring color and quantity variables
 
-let selectedColor;
+let selectedColor = "";
 let selectedQty = 0;
 
 // Adding event listener to color and quantity dropbox
@@ -55,18 +55,21 @@ quantity.addEventListener(
   ({ target }) => (selectedQty = +target.value)
 );
 
-
-
 // Function to add product to cart
 
 const addToCart = ({ name, price, imageUrl, _id }) => {
+  // Checking if color and quantity have been selected
 
-console.log({selectedQty, selectedColor});
-// 
-// Checking if color and quantity have been selected
-if( typeof selectedColor === 'undefined' || Number(selectedQty) < 1 ) return document.getElementById('error').innerHTML = ' You must select a color and quantity';
+  if (selectedColor === "" || Number(selectedQty) < 1) {
+    const error = document.getElementById("error");
 
+    // error to disappear after 2 seconds
+    setTimeout(() => (error.innerHTML = ""), 2000);
 
+    // displays error message to DOM
+
+    return (error.innerHTML = "You must select a quantity and color!");
+  }
 
   // Declaring product object to hold the parameters
 
@@ -80,66 +83,43 @@ if( typeof selectedColor === 'undefined' || Number(selectedQty) < 1 ) return doc
     qty: selectedQty,
   };
 
-
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  console.log({cart});
 
   // UPDATE THE QUANTITY WHEN PRODUCTS OF SAME COLOUR AND ID ADDED TO THE CART
-  
 
-  let cartItem = {};
-  if(cart.length > 0) {
-     cartItem = cart.find((item) => {
-      // checking for product ID and color are the same then update the quantity
-    
-      if (item._id === product._id && item.color === product.color) {
-        item.qty += Number(product.qty);
-  
-        return item;
-      }
-    });
-  
-  }
-
-  console.log({cartItem});
-
-  
+  const cartItem = cart.find(
+    (item) => item._id === product._id && item.color === product.color
+  );
 
   // checking if cartID are not similar then add the products to cart
 
-  if (Object.keys(cartItem).length > 0 || (Object.keys(cartItem) === null)) {
-    cart = cart.filter((item) => {
-      console.log({item});
-      // console.log({cartItem});
-      return item.cartId !== cartItem.cartId
-    });
-    cart = [...cart, cartItem];
+  if (cartItem) {
+    cartItem.qty += Number(product.qty);
+
+    cart = cart.filter((item) => item.cartId !== cartItem.cartId); // Exclude found item in cart
+    cart = [...cart, cartItem]; // Add modified item in cart
   } else {
     cart = [...cart, product];
   }
 
-  
-
   // Storing product in local storage
   localStorage.setItem("cart", JSON.stringify(cart));
+
+  // ADD TOAST NOTIFCATION
 
   const notification = document.getElementById("confirmation");
 
   notification.innerHTML = "Added to cart";
   notification.className = "toast";
 
+  // function to display the toast for 2 seconds then disappear
 
-  setTimeout( () => notification.className = notification.className.replace("toast", " "), 2000);
-
+  setTimeout(
+    () =>
+      (notification.className = notification.className.replace("toast", " ")),
+    2000
+  );
 };
-
- // ADD TOAST NOTIFCATION
-
- 
- 
- // function to display the toast for 2 seconds then disappear
- 
-
 
 // Adding to cart functionality to the cart button using the eventlistener method.
 (async () => {
@@ -147,5 +127,3 @@ if( typeof selectedColor === 'undefined' || Number(selectedQty) < 1 ) return doc
 
   addToCartBtn.addEventListener("click", () => addToCart(product));
 })();
-
-
